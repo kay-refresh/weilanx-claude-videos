@@ -26,6 +26,11 @@ import {
   TAI_UTC_2017,
   TROPICAL_YEAR_DAYS,
   UTC_CONTINUOUS_DATE,
+  YEAR_LEAP_FROM,
+  YEAR_LEAP_TO,
+  YEAR_OPEN,
+  YEAR_REWIND_FROM,
+  YEAR_REWIND_TO,
 } from '../../src/episodes/ep52-leap-second/timeline';
 
 describe('ep52 闰秒与授时历', () => {
@@ -90,9 +95,25 @@ describe('ep52 闰秒与授时历', () => {
     expect(COPY.parchment).toBe('授時曆');
     expect(COPY.stamp).toBe('同一刻度');
     expect(COPY.ut1Limit).toBe('|UT1−UTC| ≤ 1 小时');
+    expect(COPY.nowFoot).toBe('上限 1 小时，不等于“以后永远不调”');
+    expect(COPY.nowLeft).toBe('现在');
+    expect(COPY.book52Title).toBe('元史·卷五十二·曆一');
+    expect(COPY.book52Meta).toBe('明 宋濂等修');
+    expect(COPY.book54Title).toBe('元史·卷五十四·曆三');
+    expect(COPY.book54Meta).toBe('授時曆經上 · 步氣朔第一');
     expect(COPY.closeNote).toBe('来源见置顶评论');
     expect(UTC_CONTINUOUS_DATE).toBe('2027-05-20');
     expect(CALENDAR_READY_YEAR).toBe(1280);
+  });
+  it('倒翻从 2026 翻到 1280，第 4 镜先回到 2026', () => {
+    expect(YEAR_OPEN).toBe('2026');
+    expect(YEAR_LEAP_FROM).toBe('1972');
+    expect(YEAR_LEAP_TO).toBe('2017');
+    expect(YEAR_REWIND_FROM).toBe('2026');
+    expect(YEAR_REWIND_TO).toBe('1280');
+    expect(SHOTS.earth[0]).toBeLessThan(SHOTS.rewind[0]);
+    expect(COPY.book52Title.indexOf('卷五十二')).toBeLessThan(COPY.book52Title.indexOf('曆一'));
+    expect(COPY.book54Title.indexOf('卷五十四')).toBeLessThan(COPY.book54Title.indexOf('曆三'));
   });
   it('数字算对了：8.64、365.2425、27 个闰秒、日周一万', () => {
     expect(MODERN_DAY_SECONDS / SHOUSHI_MIAO_PER_DAY).toBe(8.64);

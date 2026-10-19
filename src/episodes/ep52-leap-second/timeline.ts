@@ -75,7 +75,19 @@ export const COPY = {
   closeSources: 'BIPM CGPM 2026 Res.5 · IERS Bulletin C · 《元史》卷五十二/五十四/一百六十四',
   closeNote: '来源见置顶评论',
   parchment: '授時曆',
+  book52Title: '元史·卷五十二·曆一',
+  book52Meta: '明 宋濂等修',
+  book54Title: '元史·卷五十四·曆三',
+  book54Meta: '授時曆經上 · 步氣朔第一',
+  nowLeft: '现在',
 } as const;
+
+/** 年份抬头：第 3 镜 1972→2017，第 4 镜先回到 2026，第 5 镜再从 2026 倒翻到 1280 */
+export const YEAR_OPEN = '2026';
+export const YEAR_LEAP_FROM = '1972';
+export const YEAR_LEAP_TO = '2017';
+export const YEAR_REWIND_FROM = '2026';
+export const YEAR_REWIND_TO = '1280';
 
 /** 字幕：[小节号, 中文, 英文]。【】里的词变金色；中文不超过 18 字；每句停到下一句开始。第 8、15 小节是爆点，不配字幕。 */
 export const CUES: [number, string, string][] = [

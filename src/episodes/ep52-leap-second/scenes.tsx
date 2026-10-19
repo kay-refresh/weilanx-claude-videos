@@ -24,11 +24,11 @@ import {
 /** 段落可见度：a 到 b 之间可见，两头各 fin / fout 帧柔入柔出 */
 export const vis = (f: number, a: number, b: number, fin = 12, fout = 12) => clamp01((f - a) / fin) * (1 - clamp01((f - (b - fout)) / fout));
 
-export const CornerNote: React.FC<{f: number; at: number; text: string; out?: number; y?: number; align?: 'left' | 'center' | 'right'}> = ({f, at, text, out, y = 868, align = 'center'}) => {
+export const CornerNote: React.FC<{f: number; at: number; text: string; out?: number; y?: number; align?: 'left' | 'center' | 'right'}> = ({f, at, text, out, y = 790, align = 'center'}) => {
   const o = clamp01((f - at) / 12) * (out === undefined ? 1 : 1 - clamp01((f - out) / 12));
   if (o <= 0) return null;
   return (
-    <div style={{position: 'absolute', left: 80, right: 80, top: y, textAlign: align, fontFamily: GF.cn, fontSize: 18, letterSpacing: 1, color: G.ivoryFaint, opacity: o}}>
+    <div style={{position: 'absolute', left: 80, right: 80, top: y, textAlign: align, fontFamily: GF.cn, fontSize: 28, letterSpacing: 1, lineHeight: 1.4, color: G.ivoryFaint, opacity: o}}>
       {text}
     </div>
   );
@@ -101,7 +101,7 @@ export const Formula: React.FC<{t: number}> = ({t}) => {
           );
         })}
       </div>
-      <div style={{fontFamily: GF.cn, fontSize: 20, color: G.ivoryFaint, marginTop: 36, opacity: clamp01((t - 28) / 10)}}>{COPY.formulaFoot}</div>
+      <div style={{fontFamily: GF.cn, fontSize: 28, color: G.ivoryFaint, marginTop: 36, lineHeight: 1.4, opacity: clamp01((t - 28) / 10)}}>{COPY.formulaFoot}</div>
     </div>
   );
 };
@@ -119,7 +119,7 @@ export const LeapCounter: React.FC<{t: number}> = ({t}) => {
       <div style={{marginTop: 28}}>
         <DotField cols={LEAP_SECONDS} rows={1} gap={34} r={6} p={p} color={() => G.goldBright} />
       </div>
-      <div style={{fontFamily: GF.cn, fontSize: 18, color: G.ivoryFaint, marginTop: 14}}>
+      <div style={{fontFamily: GF.cn, fontSize: 28, color: G.ivoryFaint, marginTop: 14}}>
         {TAI_UTC_2017} − {TAI_UTC_1972} = {LEAP_SECONDS} 次正闰秒
       </div>
     </div>
@@ -154,7 +154,7 @@ export const NameCards: React.FC<{f: number}> = ({f}) => {
       <div style={{position: 'absolute', right: 280, top: 280, opacity: smashed ? 0.35 : 1}}>
         <Card title="卷五十四" mark={smashed && f > HIT2 + 20 ? '分' : '？'} delay={6} t={t} />
       </div>
-      <div style={{position: 'absolute', left: 0, right: 0, top: 640, textAlign: 'center', fontFamily: GF.cn, fontSize: 20, color: G.ivoryFaint, opacity: vis(f, a, b, 16, 8)}}>
+      <div style={{position: 'absolute', left: 0, right: 0, top: 640, textAlign: 'center', fontFamily: GF.cn, fontSize: 28, color: G.ivoryFaint, opacity: vis(f, a, b, 16, 8)}}>
         <span style={{marginRight: 180}}>卷五十二</span>
         <span>卷五十四</span>
       </div>
@@ -216,7 +216,7 @@ export const Dial54Shot: React.FC<{f: number}> = ({f}) => {
       <div style={{position: 'absolute', left: 220, top: 170}}>
         <WanDial id="day10k" size={700} major={DIAL_MAJOR} minor={DIAL_MINOR} p={p} label={p > 0.55 ? COPY.dialLabel : undefined} />
       </div>
-      <GQuote f={f} at={a + 10} text="日周，【一萬】。" source="《元史》卷五十四《授時曆經上》" x={1180} y={300} w={640} align="left" out={b - 4} />
+      <GQuote f={f} at={a + 10} text="日周，【一萬】。" source="《元史》卷五十四《授時曆經上》" x={1180} y={300} w={640} align="left" out={b - 4} sourceSize={28} />
     </AbsoluteFill>
   );
 };
@@ -230,7 +230,7 @@ export const FenQuoteShot: React.FC<{f: number}> = ({f}) => {
       <div style={{position: 'absolute', left: 80, top: 180, opacity: 0.7}}>
         <WanDial id="fen-dial" size={520} major={DIAL_MAJOR} minor={DIAL_MINOR} p={1} spin={t * 0.08} label={COPY.dialLabel} />
       </div>
-      <GQuote f={f} at={a} original={undefined} text={COPY.quote54Year} source={COPY.quote54YearSource} x={1180} y={250} w={700} align="left" out={b - 4} />
+      <GQuote f={f} at={a} original={undefined} text={COPY.quote54Year} source={COPY.quote54YearSource} x={1180} y={250} w={700} align="left" out={b - 4} sourceSize={28} />
       <div style={{position: 'absolute', left: 860, top: 620, fontFamily: GF.num, fontSize: 42, opacity: draw, ...goldText(0.45)}}>{COPY.suiShiFormula}</div>
     </AbsoluteFill>
   );
@@ -247,14 +247,19 @@ export const NowShot: React.FC<{f: number}> = ({f}) => {
       </div>
       <div style={{position: 'absolute', left: 860, top: 280, opacity: clamp01(t / 12)}}>
         <div style={{fontFamily: GF.num, fontSize: 64, ...goldText(0.6)}}>{COPY.ut1Limit}</div>
-        <svg width={760} height={90} style={{marginTop: 36, overflow: 'visible'}}>
-          <line x1={0} y1={40} x2={760} y2={40} stroke={G.goldLine} strokeWidth={2} pathLength={1} strokeDasharray={`${line} 1`} />
-          <circle cx={760 * 0.72} cy={40} r={8} fill={G.goldBright} opacity={line} style={{filter: `drop-shadow(0 0 8px ${G.gold})`}} />
-          <text x={760 * 0.72} y={78} textAnchor="middle" fontFamily={GF.num} fontSize={22} fill={G.gold} opacity={line}>
+        <svg width={780} height={110} style={{marginTop: 36, overflow: 'visible'}}>
+          <line x1={24} y1={36} x2={736} y2={36} stroke={G.goldLine} strokeWidth={2.4} pathLength={1} strokeDasharray={`${line} 1`} />
+          <polygon points="736,36 714,26 714,46" fill={G.gold} opacity={line} />
+          <circle cx={24} cy={36} r={6} fill={G.gold} opacity={line} />
+          <circle cx={700} cy={36} r={8} fill={G.goldBright} opacity={line} style={{filter: `drop-shadow(0 0 8px ${G.gold})`}} />
+          <text x={24} y={82} textAnchor="middle" fontFamily={GF.cn} fontSize={28} fill={G.ivoryDim} opacity={line}>
+            {COPY.nowLeft}
+          </text>
+          <text x={700} y={82} textAnchor="middle" fontFamily={GF.num} fontSize={28} fill={G.gold} opacity={line}>
             2027-05-20
           </text>
         </svg>
-        <div style={{fontFamily: GF.cn, fontSize: 22, color: G.ivoryDim, marginTop: 8, opacity: clamp01((t - 20) / 12)}}>2027-05-20</div>
+        <div style={{fontFamily: GF.cn, fontSize: 28, color: G.ivoryFaint, marginTop: 10, lineHeight: 1.4, maxWidth: 760, opacity: clamp01((t - 20) / 12)}}>{COPY.nowFoot}</div>
       </div>
     </AbsoluteFill>
   );
@@ -316,8 +321,8 @@ export const CloseShot: React.FC<{f: number}> = ({f}) => {
       <svg width={1920} height={1080} style={{position: 'absolute'}}>
         <circle cx={960} cy={360} r={16} fill={G.goldBright} style={{filter: `drop-shadow(0 0 14px ${G.goldBright})`}} />
       </svg>
-      <div style={{position: 'absolute', left: 0, right: 0, top: 820, textAlign: 'center', fontFamily: GF.cn, fontSize: 18, color: G.ivoryFaint, opacity: clamp01((t - 20) / 14)}}>{COPY.closeSources}</div>
-      <div style={{position: 'absolute', left: 0, right: 0, top: 860, textAlign: 'center', fontFamily: GF.cn, fontSize: 20, color: G.ivoryDim, opacity: clamp01((t - 36) / 12)}}>{COPY.closeNote}</div>
+      <div style={{position: 'absolute', left: 80, right: 80, top: 790, textAlign: 'center', fontFamily: GF.cn, fontSize: 28, color: G.ivoryFaint, lineHeight: 1.4, opacity: clamp01((t - 20) / 14)}}>{COPY.closeSources}</div>
+      <div style={{position: 'absolute', left: 0, right: 0, top: 860, textAlign: 'center', fontFamily: GF.cn, fontSize: 28, color: G.ivoryDim, opacity: clamp01((t - 36) / 12)}}>{COPY.closeNote}</div>
     </AbsoluteFill>
   );
 };
@@ -328,7 +333,7 @@ export const HitLayer: React.FC<{f: number}> = ({f}) => {
   return (
     <AbsoluteFill style={{opacity: 1 - clamp01((f - (hb - 14)) / 14)}}>
       <Smash f={f} at={HIT} text="8.64" size={260} latin sub={TERM} y={450} />
-      <CornerNote f={f} at={HIT + 8} text={COPY.hitFoot} out={hb - 8} y={820} />
+      <CornerNote f={f} at={HIT + 8} text={COPY.hitFoot} out={hb - 8} y={790} />
     </AbsoluteFill>
   );
 };

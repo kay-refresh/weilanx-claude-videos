@@ -249,8 +249,19 @@ export const DotField: React.FC<{cols: number; rows: number; gap?: number; r?: n
   </svg>
 );
 
-/** 金线圆环刻度（命运之轮 / 表盘）：外圈刻度 + 辐条 + 沿圆周排列的文字，spin 为旋转角度 */
-export const GoldWheel: React.FC<{size: number; spin: number; spokes?: number; ring?: string[]; p?: number}> = ({size, spin, spokes = 8, ring = [], p = 1}) => {
+/**
+ * 金线圆环刻度（命运之轮 / 表盘）：外圈刻度 + 辐条 + 沿圆周排列的文字，spin 为旋转角度。
+ * ticks 默认 72（每 6 道一根稍长的刻），保持已有期数的样子；要画更密的盘请用 WanDial。
+ */
+export const GoldWheel: React.FC<{size: number; spin: number; spokes?: number; ring?: string[]; p?: number; ticks?: number; tickMajorEvery?: number}> = ({
+  size,
+  spin,
+  spokes = 8,
+  ring = [],
+  p = 1,
+  ticks = 72,
+  tickMajorEvery = 6,
+}) => {
   const r = size / 2;
   return (
     <svg width={size} height={size} viewBox={`${-r} ${-r} ${size} ${size}`} style={{overflow: 'visible'}}>
@@ -264,9 +275,9 @@ export const GoldWheel: React.FC<{size: number; spin: number; spokes?: number; r
           const a = (i / spokes) * Math.PI * 2;
           return <line key={i} x1={Math.cos(a) * r * 0.14} y1={Math.sin(a) * r * 0.14} x2={Math.cos(a) * r * 0.62} y2={Math.sin(a) * r * 0.62} stroke={G.goldLine} strokeWidth={3} />;
         })}
-        {Array.from({length: 72}, (_, i) => {
-          const a = (i / 72) * Math.PI * 2;
-          const l = i % 6 === 0 ? 0.9 : 0.94;
+        {Array.from({length: ticks}, (_, i) => {
+          const a = (i / ticks) * Math.PI * 2;
+          const l = i % tickMajorEvery === 0 ? 0.9 : 0.94;
           return <line key={`t${i}`} x1={Math.cos(a) * r * l} y1={Math.sin(a) * r * l} x2={Math.cos(a) * r * 0.98} y2={Math.sin(a) * r * 0.98} stroke={G.goldFaint} />;
         })}
         {ring.map((word, i) => {
@@ -278,6 +289,90 @@ export const GoldWheel: React.FC<{size: number; spin: number; spokes?: number; r
           );
         })}
       </g>
+    </svg>
+  );
+};
+
+const pieClip = (p: number, r: number) => {
+  const t = Math.max(0, Math.min(1, p));
+  if (t <= 0) return 'M0 0Z';
+  if (t >= 1) return `M0 ${-r} A${r} ${r} 0 1 1 0 ${r} A${r} ${r} 0 1 1 0 ${-r} Z`;
+  const a = t * Math.PI * 2 - Math.PI / 2;
+  const large = t > 0.5 ? 1 : 0;
+  return `M0 0 L0 ${-r} A${r} ${r} 0 ${large} 1 ${Math.cos(a) * r} ${Math.sin(a) * r} Z`;
+};
+
+/**
+ * 万格刻度盘：major 道长刻，每道之间 minor 道细刻，合计 major×minor 格。
+ * 授时历「日周一万」用默认 100×100 = 10,000 格。细刻用一圈虚线画出（避免每帧挂一万条 <line>），
+ * 长刻和每 10 道一根的中刻用真正的线。p 是从 12 点起顺时针画满的进度。
+ */
+export const WanDial: React.FC<{
+  size: number;
+  major?: number;
+  minor?: number;
+  p?: number;
+  spin?: number;
+  label?: string;
+  parchment?: boolean;
+  glowAt?: number;
+  glow?: number;
+  cool?: number;
+  id?: string;
+}> = ({size, major = 100, minor = 100, p = 1, spin = 0, label, parchment, glowAt, glow = 0, cool = 0, id = 'wan'}) => {
+  const r = size / 2;
+  const total = major * minor;
+  const fineR = r * 0.97;
+  const circ = 2 * Math.PI * fineR;
+  const unit = circ / total;
+  const gold = cool > 0.5 ? 'rgba(160,190,230,0.7)' : G.goldLine;
+  const goldFaint = cool > 0.5 ? 'rgba(160,190,230,0.28)' : G.goldFaint;
+  const goldBright = cool > 0.5 ? '#c8d8f0' : G.goldBright;
+  const clipId = `wan-${id}`;
+  const ga = ((glowAt ?? 0) * Math.PI) / 180 - Math.PI / 2;
+  return (
+    <svg width={size} height={size} viewBox={`${-r} ${-r} ${size} ${size}`} style={{overflow: 'visible'}}>
+      <defs>
+        <clipPath id={clipId}>
+          <path d={pieClip(p, r * 1.05)} />
+        </clipPath>
+      </defs>
+      {parchment ? <circle r={r * 0.88} fill="rgba(230,213,174,0.12)" stroke="rgba(230,213,174,0.35)" strokeWidth={1} /> : null}
+      <g transform={`rotate(${spin})`} clipPath={`url(#${clipId})`}>
+        <circle r={r * 0.98} fill="none" stroke={gold} strokeWidth={1.4} />
+        <circle r={r * 0.86} fill="none" stroke={goldFaint} strokeWidth={1} />
+        <circle r={r * 0.18} fill="none" stroke={gold} strokeWidth={1.6} />
+        <circle r={r * 0.04} fill={goldBright} />
+        <circle
+          r={fineR}
+          fill="none"
+          stroke={goldBright}
+          strokeWidth={4}
+          strokeDasharray={`${unit * 0.42} ${unit * 0.58}`}
+          opacity={0.55}
+          transform="rotate(-90)"
+        />
+        {Array.from({length: major}, (_, i) => {
+          const a = (i / major) * Math.PI * 2 - Math.PI / 2;
+          return <line key={`M${i}`} x1={Math.cos(a) * r * 0.82} y1={Math.sin(a) * r * 0.82} x2={Math.cos(a) * r * 0.98} y2={Math.sin(a) * r * 0.98} stroke={G.gold} strokeWidth={i % 10 === 0 ? 2.2 : 1.4} />;
+        })}
+        {Array.from({length: major * 10}, (_, i) => {
+          if (i % 10 === 0) return null;
+          const a = (i / (major * 10)) * Math.PI * 2 - Math.PI / 2;
+          return <line key={`m${i}`} x1={Math.cos(a) * r * 0.9} y1={Math.sin(a) * r * 0.9} x2={Math.cos(a) * r * 0.98} y2={Math.sin(a) * r * 0.98} stroke={goldFaint} strokeWidth={0.8} />;
+        })}
+      </g>
+      {label ? (
+        <text y={8} textAnchor="middle" fontFamily={GF.cn} fontSize={size * 0.07} fill={G.goldBright} style={glowLine(G.gold, 6)}>
+          {label}
+        </text>
+      ) : null}
+      {glow > 0 ? (
+        <g>
+          <circle cx={Math.cos(ga) * r * 0.96} cy={Math.sin(ga) * r * 0.96} r={size * 0.028} fill={G.goldBright} opacity={glow} style={glowLine(G.goldBright, 10)} />
+          <circle cx={Math.cos(ga) * r * 0.96} cy={Math.sin(ga) * r * 0.96} r={size * 0.012} fill="#fff6d4" opacity={glow} />
+        </g>
+      ) : null}
     </svg>
   );
 };

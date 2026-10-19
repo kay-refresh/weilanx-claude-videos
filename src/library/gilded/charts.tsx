@@ -338,11 +338,12 @@ export const WanDial: React.FC<{
         </clipPath>
       </defs>
       {parchment ? <circle r={r * 0.88} fill="rgba(230,213,174,0.12)" stroke="rgba(230,213,174,0.35)" strokeWidth={1} /> : null}
+      <circle r={r * 0.98} fill="none" stroke={goldFaint} strokeWidth={1.2} />
       <g transform={`rotate(${spin})`} clipPath={`url(#${clipId})`}>
         <circle r={r * 0.98} fill="none" stroke={gold} strokeWidth={1.4} />
         <circle r={r * 0.86} fill="none" stroke={goldFaint} strokeWidth={1} />
         <circle r={r * 0.18} fill="none" stroke={gold} strokeWidth={1.6} />
-        <circle r={r * 0.04} fill={goldBright} />
+        {label ? null : <circle r={r * 0.04} fill={goldBright} />}
         <circle
           r={fineR}
           fill="none"
@@ -363,9 +364,12 @@ export const WanDial: React.FC<{
         })}
       </g>
       {label ? (
-        <text y={8} textAnchor="middle" fontFamily={GF.cn} fontSize={size * 0.07} fill={G.goldBright} style={glowLine(G.gold, 6)}>
-          {label}
-        </text>
+        <g>
+          <circle r={r * 0.28} fill="rgba(3,3,3,0.82)" />
+          <text y={size * 0.028} textAnchor="middle" fontFamily={GF.cn} fontSize={size * 0.068} fill={G.goldBright} style={glowLine(G.gold, 6)}>
+            {label}
+          </text>
+        </g>
       ) : null}
       {glow > 0 ? (
         <g>

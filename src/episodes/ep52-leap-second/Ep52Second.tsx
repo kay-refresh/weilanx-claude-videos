@@ -42,20 +42,20 @@ export const Ep52Second: React.FC = () => {
       {f < HIT ? <OpeningWorld f={fc} /> : null}
       <HitLayer f={f} />
 
-      {f >= SHOTS.quote52[0] - 8 && f < SHOTS.quote52[1] + 8 ? (
-        <AbsoluteFill style={{opacity: vis(f, SHOTS.quote52[0], SHOTS.quote52[1])}}>
-          <GQuote f={f} at={SHOTS.quote52[0]} text={COPY.quote52Marked} source={COPY.quote52Source} y={300} />
+      {f >= SHOTS.quote52[0] - 12 && f < SHOTS.quote52[1] + 8 ? (
+        <AbsoluteFill style={{opacity: vis(f, SHOTS.quote52[0] - 12, SHOTS.quote52[1], 12, 10)}}>
+          <GQuote f={f} at={SHOTS.quote52[0] - 18} text={COPY.quote52Marked} source={COPY.quote52Source} y={300} />
         </AbsoluteFill>
       ) : null}
 
-      {f >= SHOTS.base100[0] - 8 && f < SHOTS.base100[1] + 8 ? (
-        <AbsoluteFill style={{opacity: vis(f, SHOTS.base100[0], SHOTS.base100[1])}}>
+      {f >= SHOTS.base100[0] - 10 && f < SHOTS.base100[1] + 8 ? (
+        <AbsoluteFill style={{opacity: vis(f, SHOTS.base100[0] - 10, SHOTS.base100[1], 10, 10)}}>
           <Base100 t={f - SHOTS.base100[0]} />
         </AbsoluteFill>
       ) : null}
 
-      {f >= SHOTS.formula[0] - 8 && f < SHOTS.formula[1] + 8 ? (
-        <AbsoluteFill style={{opacity: vis(f, SHOTS.formula[0], SHOTS.formula[1])}}>
+      {f >= SHOTS.formula[0] - 10 && f < SHOTS.formula[1] + 10 ? (
+        <AbsoluteFill style={{opacity: vis(f, SHOTS.formula[0] - 10, SHOTS.formula[1] + 10, 10, 10)}}>
           <Formula t={f - SHOTS.formula[0]} />
         </AbsoluteFill>
       ) : null}
@@ -71,7 +71,7 @@ export const Ep52Second: React.FC = () => {
 
       <YearHeader f={f} at={11} year="2026" caption="凡尔赛 · 国际计量大会" out={SHOTS.leap[0] - 4} />
       <YearHeader f={f} at={SHOTS.leap[0]} year="2017" prev="1972" rollAt={SHOTS.leap[0] + 8} caption="IERS · 闰秒表" out={SHOTS.rewind[0] - 4} />
-      <YearHeader f={f} at={SHOTS.rewind[0]} year="1280" prev="2026" rollAt={SHOTS.rewind[0] + 3} caption="大都 · 至元十七年" out={HIT - 4} />
+      <YearHeader f={f} at={SHOTS.rewind[0]} year="1280" prev="2026" rollAt={SHOTS.rewind[0] + 3} caption="大都 · 至元十七年" out={HIT} />
 
       <BookCite f={f} at={11} original="Resolution 5 (2026), CGPM" title="国际计量大会第5号决议" meta="BIPM · 2026-10-15 通过" seal="决议" out={260} />
       <BookCite f={f} at={SHOTS.leap[0]} original="IERS Bulletin C · Leap_Second.dat" title="闰秒表" meta="IERS · 更新至第 72 期公报（2026-07）" seal="公报" out={455} />
@@ -82,7 +82,7 @@ export const Ep52Second: React.FC = () => {
       <CornerNote f={f} at={SHOTS.utc[0] + 10} text={COPY.utcFoot} out={SHOTS.leap[0] - 6} />
       <CornerNote f={f} at={SHOTS.earth[0] + 6} text={COPY.leapFoot} out={SHOTS.rewind[0] - 4} />
       <CornerNote f={f} at={SHOTS.base100[0] + 8} text={COPY.base100Foot} out={SHOTS.formula[0] - 4} />
-      <CornerNote f={f} at={SHOTS.names[0] + 8} text={COPY.namesFoot} out={HIT2 - 4} />
+      <CornerNote f={f} at={SHOTS.names[0] + 8} text={COPY.namesFoot} out={HIT2 - 12} />
       <CornerNote f={f} at={SHOTS.now[0] + 18} text={COPY.nowFoot} out={SHOTS.now[1] - 4} />
 
       <AbsoluteFill style={{background: '#000', opacity: dark, pointerEvents: 'none'}} />
@@ -90,7 +90,7 @@ export const Ep52Second: React.FC = () => {
       {CUES.map(([, zh, en], i) => {
         const at = cueStart(i);
         const bar = CUES[i][0];
-        const out = bar === 7 ? DARK_FROM : cueEnd(i) - 12;
+        const out = bar === 7 ? DARK_FROM : bar === 14 ? HIT2 - 12 : cueEnd(i) - 12;
         if (f < at - 2 || f > out + 14) return null;
         return <GCaption key={i} f={f} at={at} out={out} text={zh} en={en} y={950} size={40} perChar={1} />;
       })}

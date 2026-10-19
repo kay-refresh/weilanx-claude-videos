@@ -92,7 +92,7 @@ export const Formula: React.FC<{t: number}> = ({t}) => {
     <div style={{position: 'absolute', left: 0, right: 0, top: 360, textAlign: 'center'}}>
       <div style={{display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: 28}}>
         {parts.map((part, i) => {
-          const v = clamp01((t - 6 - i * 8) / 10);
+          const v = clamp01((t - 4 - i * 5) / 8);
           const glow = part === '8.64' ? 1.1 : 0.35;
           return (
             <span key={part} style={{fontFamily: GF.num, fontSize: part === '8.64' ? 140 : 92, opacity: v, filter: `blur(${(1 - v) * 8}px)`, ...(part === '8.64' || part === '86,400' || part === '10,000' ? goldText(glow) : {color: G.ivoryDim})}}>
@@ -101,7 +101,7 @@ export const Formula: React.FC<{t: number}> = ({t}) => {
           );
         })}
       </div>
-      <div style={{fontFamily: GF.cn, fontSize: 20, color: G.ivoryFaint, marginTop: 36, opacity: clamp01((t - 46) / 12)}}>{COPY.formulaFoot}</div>
+      <div style={{fontFamily: GF.cn, fontSize: 20, color: G.ivoryFaint, marginTop: 36, opacity: clamp01((t - 28) / 10)}}>{COPY.formulaFoot}</div>
     </div>
   );
 };
@@ -146,13 +146,13 @@ export const NameCards: React.FC<{f: number}> = ({f}) => {
         <Card title="卷五十二" mark="秒" delay={0} t={t} />
       </div>
       <svg width={1920} height={1080} style={{position: 'absolute'}}>
-        <line x1={760} y1={430} x2={1160} y2={430} stroke={G.goldBright} strokeWidth={2} pathLength={1} strokeDasharray={`${clamp01((t - 10) / 16)} 1`} style={{filter: `drop-shadow(0 0 6px ${G.gold})`}} />
-        <text x={960} y={500} textAnchor="middle" fontFamily={GF.num} fontSize={28} fill={G.gold} opacity={clamp01((t - 14) / 10)}>
+        <line x1={760} y1={430} x2={1160} y2={430} stroke={G.goldBright} strokeWidth={2} pathLength={1} strokeDasharray={`${smashed ? 0 : clamp01((t - 10) / 16)} 1`} opacity={smashed ? 0 : 1} style={{filter: `drop-shadow(0 0 6px ${G.gold})`}} />
+        <text x={960} y={500} textAnchor="middle" fontFamily={GF.num} fontSize={28} fill={G.gold} opacity={smashed ? 0 : clamp01((t - 14) / 10)}>
           8.64 秒
         </text>
       </svg>
-      <div style={{position: 'absolute', right: 280, top: 280, opacity: smashed ? 0.25 : 1}}>
-        <Card title="卷五十四" mark={smashed ? '分' : '？'} delay={6} t={t} />
+      <div style={{position: 'absolute', right: 280, top: 280, opacity: smashed ? 0.35 : 1}}>
+        <Card title="卷五十四" mark={smashed && f > HIT2 + 20 ? '分' : '？'} delay={6} t={t} />
       </div>
       <div style={{position: 'absolute', left: 0, right: 0, top: 640, textAlign: 'center', fontFamily: GF.cn, fontSize: 20, color: G.ivoryFaint, opacity: vis(f, a, b, 16, 8)}}>
         <span style={{marginRight: 180}}>卷五十二</span>
@@ -210,9 +210,9 @@ export const OpeningWorld: React.FC<{f: number}> = ({f}) => {
 
 export const Dial54Shot: React.FC<{f: number}> = ({f}) => {
   const [a, b] = SHOTS.dial54;
-  const p = easeInOut(clamp01((f - a) / 50));
+  const p = 0.12 + 0.88 * easeInOut(clamp01((f - a) / 48));
   return (
-    <AbsoluteFill style={{opacity: vis(f, a, b + 8, 12, 14)}}>
+    <AbsoluteFill style={{opacity: vis(f, a - 10, b, 10, 12)}}>
       <div style={{position: 'absolute', left: 220, top: 170}}>
         <WanDial id="day10k" size={700} major={DIAL_MAJOR} minor={DIAL_MINOR} p={p} label={p > 0.55 ? COPY.dialLabel : undefined} />
       </div>
@@ -324,11 +324,11 @@ export const CloseShot: React.FC<{f: number}> = ({f}) => {
 
 export const HitLayer: React.FC<{f: number}> = ({f}) => {
   const [, hb] = SHOTS.hit;
-  if (f < HIT || f >= hb + 12) return null;
+  if (f < HIT || f >= hb) return null;
   return (
-    <AbsoluteFill style={{opacity: 1 - clamp01((f - (hb - 12)) / 18)}}>
+    <AbsoluteFill style={{opacity: 1 - clamp01((f - (hb - 14)) / 14)}}>
       <Smash f={f} at={HIT} text="8.64" size={260} latin sub={TERM} y={450} />
-      <CornerNote f={f} at={HIT + 8} text={COPY.hitFoot} out={hb} y={820} />
+      <CornerNote f={f} at={HIT + 8} text={COPY.hitFoot} out={hb - 8} y={820} />
     </AbsoluteFill>
   );
 };

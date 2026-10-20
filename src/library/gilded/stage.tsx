@@ -248,8 +248,22 @@ export const bellPath = (x0: number, x1: number, base: number, h: number, steps 
   return pts.join(' ');
 };
 
-/** 引文：上方原文（斜体小字），中间中文大引文（可用【】标金），下方「—— 出处」 */
-export const GQuote: React.FC<{f: number; at: number; original?: string; text: string; source: string; x?: number; y?: number; w?: number; align?: 'left' | 'center'; out?: number; sourceSize?: number}> = ({
+/** 引文：上方原文（斜体小字），中间中文大引文（可用【】标金），下方「—— 出处」。mark 是「原文」一类小标。 */
+export const GQuote: React.FC<{
+  f: number;
+  at: number;
+  original?: string;
+  text: string;
+  source: string;
+  x?: number;
+  y?: number;
+  w?: number;
+  align?: 'left' | 'center';
+  out?: number;
+  sourceSize?: number;
+  mark?: string;
+  markSize?: number;
+}> = ({
   f,
   at,
   original,
@@ -261,6 +275,8 @@ export const GQuote: React.FC<{f: number; at: number; original?: string; text: s
   align = 'center',
   out,
   sourceSize = 20,
+  mark,
+  markSize = 28,
 }) => {
   const a = soft(f, at, 22, out);
   const b = soft(f, at + 14, 26, out);
@@ -270,6 +286,9 @@ export const GQuote: React.FC<{f: number; at: number; original?: string; text: s
   return (
     <div style={{position: 'absolute', left, top: y, width: w, textAlign: align}}>
       {original ? <div style={{fontFamily: GF.latinItalic, fontSize: 21, color: G.ivoryDim, opacity: a.opacity, filter: a.filter, marginBottom: 26}}>« {original} »</div> : null}
+      {mark ? (
+        <div style={{fontFamily: GF.cn, fontSize: markSize, letterSpacing: 4, color: G.gold, marginBottom: 10, lineHeight: 1.3, opacity: b.opacity, filter: b.filter}}>{mark}</div>
+      ) : null}
       <div style={{fontFamily: GF.cn, fontWeight: 700, fontSize: 50, lineHeight: 1.45, color: G.ivory, opacity: b.opacity, filter: b.filter}}>
         {lines.map((l, i) => (
           <div key={i}>

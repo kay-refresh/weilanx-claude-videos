@@ -3,6 +3,7 @@ import {AbsoluteFill} from 'remotion';
 import {WanDial} from '../../library/gilded/charts';
 import {Dust, Grain} from '../../library/gilded/stage';
 import {G, GF, goldText, goldTextLight} from '../../library/gilded/theme';
+import {COPY} from './timeline';
 
 /**
  * ep52 的 3:4 竖版封面（1080×1440）：万格表盘居中，主字是封面简称，副字写清卷五十二和算式。
@@ -19,7 +20,7 @@ export const Ep52CoverTall: React.FC = () => (
     <div style={{position: 'absolute', left: 280, right: 280, top: 148, height: 1, background: `linear-gradient(90deg, rgba(214,180,106,0), ${G.gold}, rgba(214,180,106,0))`}} />
 
     <div style={{position: 'absolute', left: 180, top: 250}}>
-      <WanDial id="cover" size={720} major={100} minor={100} p={1} label="日周 一萬" glowAt={0} glow={0.9} />
+      <WanDial id="cover" size={720} major={100} minor={100} p={1} label={COPY.dialLabel} citeNote={COPY.quoteMark} glowAt={0} glow={0.9} />
     </div>
 
     <div style={{position: 'absolute', left: 48, right: 48, top: 1000, textAlign: 'center', fontFamily: GF.cn, fontWeight: 900, fontSize: 62, lineHeight: 1.28, color: G.ivory, textShadow: '0 4px 24px rgba(0,0,0,0.9)'}}>

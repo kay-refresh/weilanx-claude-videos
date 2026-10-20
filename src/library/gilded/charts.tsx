@@ -314,12 +314,13 @@ export const WanDial: React.FC<{
   p?: number;
   spin?: number;
   label?: string;
+  citeNote?: string;
   parchment?: boolean;
   glowAt?: number;
   glow?: number;
   cool?: number;
   id?: string;
-}> = ({size, major = 100, minor = 100, p = 1, spin = 0, label, parchment, glowAt, glow = 0, cool = 0, id = 'wan'}) => {
+}> = ({size, major = 100, minor = 100, p = 1, spin = 0, label, citeNote, parchment, glowAt, glow = 0, cool = 0, id = 'wan'}) => {
   const r = size / 2;
   const total = major * minor;
   const fineR = r * 0.97;
@@ -365,10 +366,15 @@ export const WanDial: React.FC<{
       </g>
       {label ? (
         <g>
-          <circle r={r * 0.28} fill="rgba(3,3,3,0.82)" />
-          <text y={size * 0.028} textAnchor="middle" fontFamily={GF.cn} fontSize={size * 0.068} fill={G.goldBright} style={glowLine(G.gold, 6)}>
+          <circle r={r * (citeNote ? 0.36 : 0.28)} fill="rgba(3,3,3,0.82)" />
+          <text y={citeNote ? -size * 0.012 : size * 0.028} textAnchor="middle" fontFamily={GF.cn} fontSize={Math.max(28, size * (label.length > 6 ? 0.05 : 0.068))} fill={G.goldBright} style={glowLine(G.gold, 6)}>
             {label}
           </text>
+          {citeNote ? (
+            <text y={size * 0.062} textAnchor="middle" fontFamily={GF.cn} fontSize={Math.max(28, size * 0.04)} fill={G.ivoryDim}>
+              {citeNote}
+            </text>
+          ) : null}
         </g>
       ) : null}
       {glow > 0 ? (

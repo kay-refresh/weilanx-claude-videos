@@ -214,9 +214,9 @@ export const Dial54Shot: React.FC<{f: number}> = ({f}) => {
   return (
     <AbsoluteFill style={{opacity: vis(f, a - 10, b, 10, 12)}}>
       <div style={{position: 'absolute', left: 220, top: 170}}>
-        <WanDial id="day10k" size={700} major={DIAL_MAJOR} minor={DIAL_MINOR} p={p} label={p > 0.55 ? COPY.dialLabel : undefined} />
+        <WanDial id="day10k" size={700} major={DIAL_MAJOR} minor={DIAL_MINOR} p={p} label={p > 0.55 ? COPY.dialLabel : undefined} citeNote={p > 0.55 ? COPY.quoteMark : undefined} />
       </div>
-      <GQuote f={f} at={a + 10} text="日周，【一萬】。" source="《元史》卷五十四《授時曆經上》" x={1180} y={300} w={640} align="left" out={b - 4} sourceSize={28} />
+      <GQuote f={f} at={a - 8} text={COPY.quote54DayMarked} source={COPY.quote54DaySource} x={1180} y={280} w={640} align="left" out={b - 4} sourceSize={28} mark={COPY.quoteMark} markSize={28} />
     </AbsoluteFill>
   );
 };
@@ -228,9 +228,9 @@ export const FenQuoteShot: React.FC<{f: number}> = ({f}) => {
   return (
     <AbsoluteFill style={{opacity: vis(f, a, b, 12, 12)}}>
       <div style={{position: 'absolute', left: 80, top: 180, opacity: 0.7}}>
-        <WanDial id="fen-dial" size={520} major={DIAL_MAJOR} minor={DIAL_MINOR} p={1} spin={t * 0.08} label={COPY.dialLabel} />
+        <WanDial id="fen-dial" size={520} major={DIAL_MAJOR} minor={DIAL_MINOR} p={1} spin={t * 0.08} label={COPY.dialLabel} citeNote={COPY.quoteMark} />
       </div>
-      <GQuote f={f} at={a} original={undefined} text={COPY.quote54Year} source={COPY.quote54YearSource} x={1180} y={250} w={700} align="left" out={b - 4} sourceSize={28} />
+      <GQuote f={f} at={a - 18} original={undefined} text={COPY.quote54YearMarked} source={COPY.quote54YearSource} x={1180} y={230} w={700} align="left" out={b - 4} sourceSize={28} mark={COPY.quoteMark} markSize={28} />
       <div style={{position: 'absolute', left: 860, top: 620, fontFamily: GF.num, fontSize: 42, opacity: draw, ...goldText(0.45)}}>{COPY.suiShiFormula}</div>
     </AbsoluteFill>
   );
@@ -271,7 +271,7 @@ export const BridgeShot: React.FC<{f: number}> = ({f}) => {
   return (
     <AbsoluteFill style={{opacity: vis(f, a, b, 12, 12)}}>
       <div style={{position: 'absolute', left: 180, top: 210}}>
-        <WanDial id="old" size={520} major={DIAL_MAJOR} minor={DIAL_MINOR} p={1} spin={t * 0.12} label={COPY.dialLabel} />
+        <WanDial id="old" size={520} major={DIAL_MAJOR} minor={DIAL_MINOR} p={1} spin={t * 0.12} label={COPY.dialLabel} citeNote={COPY.quoteMark} />
       </div>
       <div style={{position: 'absolute', right: 180, top: 210}}>
         <WanDial id="new" size={520} major={12} minor={5} p={1} spin={-t * 0.16} glowAt={0} glow={0.7} cool={1} />
@@ -343,8 +343,8 @@ export const Hit2Layer: React.FC<{f: number}> = ({f}) => {
   return (
     <AbsoluteFill>
       <Smash f={f} at={HIT2} text="分" size={200} flash={0.6} ring={900} sub={TERM2} y={470} />
-      <div style={{position: 'absolute', left: 905, top: 560}}>
-        <RedStamp f={f} at={HIT2 + 18} text={COPY.stamp} size={110} rot={-8} />
+      <div style={{position: 'absolute', left: 1540, top: 390}}>
+        <RedStamp f={f} at={HIT2 + 18} text={COPY.stamp} size={100} rot={-12} />
       </div>
     </AbsoluteFill>
   );

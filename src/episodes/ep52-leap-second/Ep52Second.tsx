@@ -44,7 +44,7 @@ export const Ep52Second: React.FC = () => {
 
       {f >= SHOTS.quote52[0] - 12 && f < SHOTS.quote52[1] + 8 ? (
         <AbsoluteFill style={{opacity: vis(f, SHOTS.quote52[0] - 12, SHOTS.quote52[1], 12, 10)}}>
-          <GQuote f={f} at={SHOTS.quote52[0] - 18} text={COPY.quote52Marked} source={COPY.quote52Source} y={300} sourceSize={28} />
+          <GQuote f={f} at={SHOTS.quote52[0] - 18} text={COPY.quote52Marked} source={COPY.quote52Source} y={300} sourceSize={28} mark={COPY.quoteMark} markSize={28} />
         </AbsoluteFill>
       ) : null}
 

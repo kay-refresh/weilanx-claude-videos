@@ -24,6 +24,8 @@ import {
   SUI_SHI_FEN,
   TAI_UTC_1972,
   TAI_UTC_2017,
+  TERM,
+  TERM2,
   TROPICAL_YEAR_DAYS,
   UTC_CONTINUOUS_DATE,
   YEAR_LEAP_FROM,
@@ -32,6 +34,10 @@ import {
   YEAR_REWIND_FROM,
   YEAR_REWIND_TO,
 } from '../../src/episodes/ep52-leap-second/timeline';
+
+/** 繁简不重叠的字：用来核对「引文繁体 / 其余简体」 */
+const TRAD_ONLY = /[歲曆萬時實經餘氣]/;
+const SIMP_ONLY = /[岁历万时实经余气]/;
 
 describe('ep52 闰秒与授时历', () => {
   it('高潮踩在 we-never 第一个重拍（17.45 秒 / 第 524 帧）上，第二个爆点在第 972 帧', () => {
@@ -82,25 +88,33 @@ describe('ep52 闰秒与授时历', () => {
     expect(CUES[10][1]).toBe('卷五十二叫它“秒”，卷五十四叫它——');
     expect(COPY.utcLine).toBe('continuous UTC will become effective on 20 May 2027');
     expect(COPY.quote52).toBe('得每歲三百六十五日二十四分二十五秒');
-    expect(COPY.quote52Marked).toContain('【二十四分二十五秒】');
-    expect(COPY.quote52Source).toBe('《元史》卷五十二《曆一·歲餘歲差》 · 本卷用的是“秒”');
+    expect(COPY.quote52Marked).toBe('「得每歲三百六十五日\n【二十四分二十五秒】」');
+    expect(COPY.quote52Marked.replace(/[「」【】\n]/g, '')).toBe(COPY.quote52);
+    expect(COPY.quote52Source).toBe('《元史》卷五十二《历一·岁余岁差》 · 本卷用的是“秒”');
     expect(COPY.formula).toBe('86,400 ÷ 10,000 = 8.64');
     expect(COPY.formulaParts.join(' ')).toBe('86,400 ÷ 10,000 = 8.64');
     expect(COPY.formulaFoot).toBe('86,400 = 现代 1 日的秒数；10,000 = 授时历 1 日的“秒”数（卷五十二）');
-    expect(COPY.dialLabel).toBe('日周 一萬');
+    expect(COPY.dialLabel).toBe('「日周 一萬」');
     expect(COPY.quote54Day).toBe('日周，一萬。');
+    expect(COPY.quote54DayMarked).toBe('「日周，【一萬】。」');
+    expect(COPY.quote54DayMarked.replace(/[「」【】]/g, '')).toBe(COPY.quote54Day);
+    expect(COPY.quote54DaySource).toBe('《元史》卷五十四《授时历经上》');
     expect(COPY.quote54Year).toBe('歲實，三百六十五萬二千四百二十五分');
+    expect(COPY.quote54YearMarked).toBe('「歲實，三百六十五萬二千四百二十五分」');
+    expect(COPY.quote54YearMarked.replace(/[「」]/g, '')).toBe(COPY.quote54Year);
     expect(COPY.quote54YearSource).toBe('《元史》卷五十四 · 本卷用的是“分”');
+    expect(COPY.quoteMark).toBe('《元史》原文');
     expect(COPY.suiShiFormula).toBe('3,652,425 ÷ 10,000 = 365.2425 日');
-    expect(COPY.parchment).toBe('授時曆');
-    expect(COPY.stamp).toBe('同一刻度');
+    expect(COPY.parchment).toBe('授时历');
+    expect(COPY.stamp).toBe('同一');
+    expect(COPY.stamp).toHaveLength(2);
     expect(COPY.ut1Limit).toBe('|UT1−UTC| ≤ 1 小时');
     expect(COPY.nowFoot).toBe('上限 1 小时，不等于“以后永远不调”');
     expect(COPY.nowLeft).toBe('现在');
-    expect(COPY.book52Title).toBe('元史·卷五十二·曆一');
+    expect(COPY.book52Title).toBe('元史·卷五十二·历一');
     expect(COPY.book52Meta).toBe('明 宋濂等修');
-    expect(COPY.book54Title).toBe('元史·卷五十四·曆三');
-    expect(COPY.book54Meta).toBe('授時曆經上 · 步氣朔第一');
+    expect(COPY.book54Title).toBe('元史·卷五十四·历三');
+    expect(COPY.book54Meta).toBe('授时历经上 · 步气朔第一');
     expect(COPY.closeNote).toBe('来源见置顶评论');
     expect(UTC_CONTINUOUS_DATE).toBe('2027-05-20');
     expect(CALENDAR_READY_YEAR).toBe(1280);
@@ -112,8 +126,51 @@ describe('ep52 闰秒与授时历', () => {
     expect(YEAR_REWIND_FROM).toBe('2026');
     expect(YEAR_REWIND_TO).toBe('1280');
     expect(SHOTS.earth[0]).toBeLessThan(SHOTS.rewind[0]);
-    expect(COPY.book52Title.indexOf('卷五十二')).toBeLessThan(COPY.book52Title.indexOf('曆一'));
-    expect(COPY.book54Title.indexOf('卷五十四')).toBeLessThan(COPY.book54Title.indexOf('曆三'));
+    expect(COPY.book52Title.indexOf('卷五十二')).toBeLessThan(COPY.book52Title.indexOf('历一'));
+    expect(COPY.book54Title.indexOf('卷五十四')).toBeLessThan(COPY.book54Title.indexOf('历三'));
+  });
+  it('引文繁体加「」；非引文没有繁体，引文没有简体', () => {
+    const quotes = [COPY.quote52, COPY.quote52Marked, COPY.quote54Day, COPY.quote54DayMarked, COPY.quote54Year, COPY.quote54YearMarked, COPY.dialLabel];
+    for (const q of quotes) {
+      expect(q).toMatch(TRAD_ONLY);
+      expect(q).not.toMatch(SIMP_ONLY);
+    }
+    for (const q of [COPY.quote52Marked, COPY.quote54DayMarked, COPY.quote54YearMarked, COPY.dialLabel]) {
+      expect(q.startsWith('「')).toBe(true);
+      expect(q.endsWith('」')).toBe(true);
+    }
+    const nonQuotes = [
+      ...CUES.map(([, zh]) => zh),
+      COPY.utcFoot,
+      COPY.leapFoot,
+      COPY.hitFoot,
+      COPY.quote52Source,
+      COPY.base100Foot,
+      COPY.formulaFoot,
+      COPY.quote54DaySource,
+      COPY.quote54YearSource,
+      COPY.quoteMark,
+      COPY.suiShiFormula,
+      COPY.namesFoot,
+      COPY.card52,
+      COPY.card54,
+      COPY.stamp,
+      COPY.ut1Limit,
+      COPY.nowFoot,
+      COPY.closeSources,
+      COPY.closeNote,
+      COPY.parchment,
+      COPY.book52Title,
+      COPY.book52Meta,
+      COPY.book54Title,
+      COPY.book54Meta,
+      COPY.nowLeft,
+      TERM,
+      TERM2,
+    ];
+    for (const s of nonQuotes) {
+      expect(s).not.toMatch(TRAD_ONLY);
+    }
   });
   it('数字算对了：8.64、365.2425、27 个闰秒、日周一万', () => {
     expect(MODERN_DAY_SECONDS / SHOUSHI_MIAO_PER_DAY).toBe(8.64);

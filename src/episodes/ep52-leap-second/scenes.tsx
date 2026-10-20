@@ -6,6 +6,7 @@ import {RedStamp} from '../../library/gilded/props';
 import {GQuote, Smash, Soft} from '../../library/gilded/stage';
 import {G, GF, goldText, goldTextLight} from '../../library/gilded/theme';
 import {
+  ANIM,
   BAR,
   COPY,
   DIAL_MAJOR,
@@ -216,7 +217,7 @@ export const Dial54Shot: React.FC<{f: number}> = ({f}) => {
       <div style={{position: 'absolute', left: 220, top: 170}}>
         <WanDial id="day10k" size={700} major={DIAL_MAJOR} minor={DIAL_MINOR} p={p} label={p > 0.55 ? COPY.dialLabel : undefined} citeNote={p > 0.55 ? COPY.quoteMark : undefined} />
       </div>
-      <GQuote f={f} at={a - 8} text={COPY.quote54DayMarked} source={COPY.quote54DaySource} x={1180} y={280} w={640} align="left" out={b - 4} sourceSize={28} mark={COPY.quoteMark} markSize={28} />
+      <GQuote f={f} at={a + ANIM.quoteAtOffset} text={COPY.quote54DayMarked} source={COPY.quote54DaySource} x={1180} y={280} w={640} align="left" out={b - 12} sourceSize={28} mark={COPY.quoteMark} markSize={28} />
     </AbsoluteFill>
   );
 };
@@ -226,11 +227,11 @@ export const FenQuoteShot: React.FC<{f: number}> = ({f}) => {
   const t = f - a;
   const draw = clamp01((t - 8) / 20);
   return (
-    <AbsoluteFill style={{opacity: vis(f, a, b, 12, 12)}}>
+    <AbsoluteFill style={{opacity: vis(f, a - 12, b, 12, 12)}}>
       <div style={{position: 'absolute', left: 80, top: 180, opacity: 0.7}}>
         <WanDial id="fen-dial" size={520} major={DIAL_MAJOR} minor={DIAL_MINOR} p={1} spin={t * 0.08} label={COPY.dialLabel} citeNote={COPY.quoteMark} />
       </div>
-      <GQuote f={f} at={a - 18} original={undefined} text={COPY.quote54YearMarked} source={COPY.quote54YearSource} x={1180} y={230} w={700} align="left" out={b - 4} sourceSize={28} mark={COPY.quoteMark} markSize={28} />
+      <GQuote f={f} at={a + ANIM.quoteAtOffset} original={undefined} text={COPY.quote54YearMarked} source={COPY.quote54YearSource} x={1180} y={230} w={700} align="left" out={b - 12} sourceSize={28} mark={COPY.quoteMark} markSize={28} />
       <div style={{position: 'absolute', left: 860, top: 620, fontFamily: GF.num, fontSize: 42, opacity: draw, ...goldText(0.45)}}>{COPY.suiShiFormula}</div>
     </AbsoluteFill>
   );
@@ -239,7 +240,7 @@ export const FenQuoteShot: React.FC<{f: number}> = ({f}) => {
 export const NowShot: React.FC<{f: number}> = ({f}) => {
   const [a, b] = SHOTS.now;
   const t = f - a;
-  const line = clamp01((t - 8) / 28);
+  const line = clamp01((t - 4) / ANIM.nowLine);
   return (
     <AbsoluteFill style={{opacity: vis(f, a, b, 12, 12)}}>
       <div style={{position: 'absolute', left: 200, top: 200}}>
@@ -259,7 +260,7 @@ export const NowShot: React.FC<{f: number}> = ({f}) => {
             2027-05-20
           </text>
         </svg>
-        <div style={{fontFamily: GF.cn, fontSize: 28, color: G.ivoryFaint, marginTop: 10, lineHeight: 1.4, maxWidth: 760, opacity: clamp01((t - 20) / 12)}}>{COPY.nowFoot}</div>
+        <div style={{fontFamily: GF.cn, fontSize: 28, color: G.ivoryFaint, marginTop: 10, lineHeight: 1.4, maxWidth: 760, opacity: clamp01((t - (ANIM.nowFoot - 8)) / 8)}}>{COPY.nowFoot}</div>
       </div>
     </AbsoluteFill>
   );
@@ -321,8 +322,8 @@ export const CloseShot: React.FC<{f: number}> = ({f}) => {
       <svg width={1920} height={1080} style={{position: 'absolute'}}>
         <circle cx={960} cy={360} r={16} fill={G.goldBright} style={{filter: `drop-shadow(0 0 14px ${G.goldBright})`}} />
       </svg>
-      <div style={{position: 'absolute', left: 80, right: 80, top: 790, textAlign: 'center', fontFamily: GF.cn, fontSize: 28, color: G.ivoryFaint, lineHeight: 1.4, opacity: clamp01((t - 20) / 14)}}>{COPY.closeSources}</div>
-      <div style={{position: 'absolute', left: 0, right: 0, top: 860, textAlign: 'center', fontFamily: GF.cn, fontSize: 28, color: G.ivoryDim, opacity: clamp01((t - 36) / 12)}}>{COPY.closeNote}</div>
+      <div style={{position: 'absolute', left: 80, right: 80, top: 790, textAlign: 'center', fontFamily: GF.cn, fontSize: 28, color: G.ivoryFaint, lineHeight: 1.4, opacity: clamp01((t - (ANIM.closeSources - 8)) / 8)}}>{COPY.closeSources}</div>
+      <div style={{position: 'absolute', left: 0, right: 0, top: 860, textAlign: 'center', fontFamily: GF.cn, fontSize: 28, color: G.ivoryDim, opacity: clamp01((t - (ANIM.closeNote - 8)) / 8)}}>{COPY.closeNote}</div>
     </AbsoluteFill>
   );
 };

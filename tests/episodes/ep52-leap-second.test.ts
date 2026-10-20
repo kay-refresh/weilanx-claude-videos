@@ -12,11 +12,14 @@ import {
   DIAL_TICKS,
   DURATION,
   FPS,
+  FORMULA_RESULT_HOLD_SEC,
   HIT,
   HIT2,
+  HIT2_BAR,
   JUAN54_MIAO_IN_SI,
   LEAP_SECONDS,
   MIAO_IN_SI,
+  MIN_HOLD_SEC,
   MODERN_DAY_SECONDS,
   SFX,
   SHOUSHI_MIAO_PER_DAY,
@@ -26,6 +29,7 @@ import {
   TAI_UTC_2017,
   TERM,
   TERM2,
+  textHolds,
   TROPICAL_YEAR_DAYS,
   UTC_CONTINUOUS_DATE,
   YEAR_LEAP_FROM,
@@ -40,18 +44,18 @@ const TRAD_ONLY = /[歲曆萬時實經餘氣]/;
 const SIMP_ONLY = /[岁历万时实经余气]/;
 
 describe('ep52 闰秒与授时历', () => {
-  it('高潮踩在 we-never 第一个重拍（17.45 秒 / 第 524 帧）上，第二个爆点在第 972 帧', () => {
+  it('高潮踩在 we-never 第一个重拍（17.45 秒 / 第 524 帧）上，第二个爆点在第 21.5 小节', () => {
     expect(HIT).toBe(524);
-    expect(HIT2).toBe(972);
+    expect(HIT2).toBe(Math.round(barSec(HIT2_BAR) * FPS));
+    expect(HIT2_BAR).toBe(21.5);
     expect(Math.abs(HIT - 17.45 * FPS)).toBeLessThanOrEqual(2);
     expect(Math.abs(barSec(8) - 17.45)).toBeLessThan(2 / FPS);
-    expect(HIT2).toBe(Math.round(barSec(15) * FPS));
     expect(DARK_FROM).toBeLessThan(HIT - 10);
     expect(DARK_FROM).toBe(501);
   });
-  it('片长 45 秒 = 1350 帧', () => {
-    expect(DURATION).toBe(1350);
-    expect(DURATION / FPS).toBe(45);
+  it('片长 60 秒 = 1800 帧', () => {
+    expect(DURATION).toBe(1800);
+    expect(DURATION / FPS).toBe(60);
   });
   it('字幕：按小节递增、都在片长内、中文不超过 18 字、都有英文', () => {
     for (let i = 1; i < CUES.length; i++) expect(CUES[i][0]).toBeGreaterThan(CUES[i - 1][0]);
@@ -63,7 +67,7 @@ describe('ep52 闰秒与授时历', () => {
   });
   it('锚词：开头埋下、第 18 小节重新定义；重拍前话说一半；最后一句是问题', () => {
     expect(CUES[0][1]).toContain(ANCHOR);
-    expect(CUES.some(([bar, zh]) => bar === 18 && zh.includes(ANCHOR))).toBe(true);
+    expect(CUES.some(([bar, zh]) => bar === 25.5 && zh.includes(ANCHOR))).toBe(true);
     const before = CUES.filter(([bar]) => bar < 8).pop()!;
     expect(before[1]).toMatch(/——$/);
     expect(CUES[CUES.length - 1][1]).toMatch(/？$/);
@@ -185,16 +189,25 @@ describe('ep52 闰秒与授时历', () => {
   it('音效卡在分镜帧上；本地已生成音频时文件存在', () => {
     expect(SFX[0][1]).toBe(HIT);
     expect(SFX[4][1]).toBe(HIT2);
-    expect(SFX[7][1]).toBe(frBar19Plus20());
+    expect(SFX[7][1]).toBe(SHOTS.close[0] + 20);
     if (!existsSync('public/audio/ep52-leap-second/bgm.wav')) return;
     for (const [file, at] of SFX) {
       expect(existsSync(`public/${file}`)).toBe(true);
       expect(at).toBeLessThan(DURATION);
     }
   });
+  it('字幕、引文、算式、卡片：入场结束后到退场至少停 1.5 秒，字多按每秒 5 字，公式结果后至少 2.5 秒', () => {
+    expect(MIN_HOLD_SEC).toBe(1.5);
+    expect(FORMULA_RESULT_HOLD_SEC).toBe(2.5);
+    for (const hold of textHolds()) {
+      const holdSec = (hold.exit - hold.enter) / FPS;
+      expect(hold.exit, hold.id).toBeGreaterThan(hold.enter);
+      expect(holdSec, `${hold.id} hold ${holdSec.toFixed(2)}s < ${hold.minSec}s`).toBeGreaterThanOrEqual(hold.minSec - 1 / FPS);
+    }
+    const result = textHolds().find((h) => h.id === 'formula-result')!;
+    expect((result.exit - result.enter) / FPS).toBeGreaterThanOrEqual(FORMULA_RESULT_HOLD_SEC - 1 / FPS);
+  });
 });
-
-const frBar19Plus20 = () => Math.round((0.36 + 2.136 * 19) * 30) + 20;
 
 describe('we-never 网格常量', () => {
   it('小节长仍是 2.136 秒', () => {

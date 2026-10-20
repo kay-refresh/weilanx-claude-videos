@@ -20,12 +20,13 @@ import {
   RedefineShot,
   vis,
 } from './scenes';
-import {COPY, CUES, cueEnd, cueStart, DARK_FROM, DURATION, FREEZE, HIT, HIT2, SFX, SHOTS, YEAR_LEAP_FROM, YEAR_LEAP_TO, YEAR_OPEN, YEAR_REWIND_FROM, YEAR_REWIND_TO} from './timeline';
+import {ANIM, COPY, CUES, captionAt, captionOut, DARK_FROM, DURATION, FREEZE, HIT, HIT2, SFX, SHOTS, YEAR_LEAP_FROM, YEAR_LEAP_TO, YEAR_OPEN, YEAR_REWIND_FROM, YEAR_REWIND_TO} from './timeline';
 
 /**
  * ep52 闰秒与授时历（无口播）：锚词「一秒」。
  * 0–17.4 秒一个连续长镜头：发光秒点 → 决议原文 → 27 个闰秒 → 地球自转 → 年份倒翻回 1280；
  * 17.45 秒随重拍砸出 8.64；之后原文、百进制、算式、日周一万、两种叫法、2027 新规则、两盘合成一秒，抛问题。
+ * 密镜按整小节 / 半小节拉长，片长 60 秒。
  */
 export const Ep52Second: React.FC = () => {
   const f = useCurrentFrame();
@@ -42,9 +43,9 @@ export const Ep52Second: React.FC = () => {
       {f < HIT ? <OpeningWorld f={fc} /> : null}
       <HitLayer f={f} />
 
-      {f >= SHOTS.quote52[0] - 12 && f < SHOTS.quote52[1] + 8 ? (
-        <AbsoluteFill style={{opacity: vis(f, SHOTS.quote52[0] - 12, SHOTS.quote52[1], 12, 10)}}>
-          <GQuote f={f} at={SHOTS.quote52[0] - 18} text={COPY.quote52Marked} source={COPY.quote52Source} y={300} sourceSize={28} mark={COPY.quoteMark} markSize={28} />
+      {f >= SHOTS.quote52[0] + ANIM.quoteAtOffset && f < SHOTS.quote52[1] + 8 ? (
+        <AbsoluteFill style={{opacity: vis(f, SHOTS.quote52[0] - 12, SHOTS.quote52[1], 12, 12)}}>
+          <GQuote f={f} at={SHOTS.quote52[0] + ANIM.quoteAtOffset} text={COPY.quote52Marked} source={COPY.quote52Source} y={300} sourceSize={28} mark={COPY.quoteMark} markSize={28} out={SHOTS.quote52[1] - 12} />
         </AbsoluteFill>
       ) : null}
 
@@ -54,8 +55,8 @@ export const Ep52Second: React.FC = () => {
         </AbsoluteFill>
       ) : null}
 
-      {f >= SHOTS.formula[0] - 10 && f < SHOTS.formula[1] + 10 ? (
-        <AbsoluteFill style={{opacity: vis(f, SHOTS.formula[0] - 10, SHOTS.formula[1] + 10, 10, 10)}}>
+      {f >= SHOTS.formula[0] - 10 && f < SHOTS.formula[1] + 8 ? (
+        <AbsoluteFill style={{opacity: vis(f, SHOTS.formula[0] - 10, SHOTS.formula[1], 10, 12)}}>
           <Formula t={f - SHOTS.formula[0]} />
         </AbsoluteFill>
       ) : null}
@@ -74,28 +75,27 @@ export const Ep52Second: React.FC = () => {
       <YearHeader f={f} at={SHOTS.earth[0]} year={YEAR_REWIND_FROM} caption="凡尔赛 · 国际计量大会" out={SHOTS.rewind[0] - 2} />
       <YearHeader f={f} at={SHOTS.rewind[0]} year={YEAR_REWIND_TO} prev={YEAR_REWIND_FROM} rollAt={SHOTS.rewind[0] + 18} caption="大都 · 至元十七年" out={HIT} />
 
-      <BookCite f={f} at={11} original="Resolution 5 (2026), CGPM" title="国际计量大会第5号决议" meta="BIPM · 2026-10-15 通过" seal="决议" out={260} originalSize={28} titleSize={30} metaSize={28} maxWidth={720} />
+      <BookCite f={f} at={11} original="Resolution 5 (2026), CGPM" title="国际计量大会第5号决议" meta="BIPM · 2026-10-15 通过" seal="决议" out={SHOTS.leap[0] - 8} originalSize={28} titleSize={30} metaSize={28} maxWidth={720} />
       <BookCite f={f} at={SHOTS.leap[0]} original="IERS Bulletin C · Leap_Second.dat" title="闰秒表" meta="IERS · 更新至第 72 期公报（2026-07）" seal="公报" out={SHOTS.earth[0] - 6} originalSize={28} titleSize={30} metaSize={28} maxWidth={720} />
-      <BookCite f={f} at={SHOTS.rewind[0]} original="Yuan Shi, juan 52" title={COPY.book52Title} meta={COPY.book52Meta} seal="正史" out={776} originalSize={28} titleSize={30} metaSize={28} maxWidth={720} />
-      <BookCite f={f} at={SHOTS.dial54[0]} original="Yuan Shi, juan 54" title={COPY.book54Title} meta={COPY.book54Meta} seal="历经" out={968} originalSize={28} titleSize={30} metaSize={28} maxWidth={720} />
+      <BookCite f={f} at={SHOTS.rewind[0]} original="Yuan Shi, juan 52" title={COPY.book52Title} meta={COPY.book52Meta} seal="正史" out={SHOTS.dial54[0] - 8} originalSize={28} titleSize={30} metaSize={28} maxWidth={720} />
+      <BookCite f={f} at={SHOTS.dial54[0]} original="Yuan Shi, juan 54" title={COPY.book54Title} meta={COPY.book54Meta} seal="历经" out={SHOTS.now[0] - 8} originalSize={28} titleSize={30} metaSize={28} maxWidth={720} />
       <BookCite f={f} at={SHOTS.now[0]} original="Resolution 5 (2026)" title="国际计量大会第5号决议" meta="BIPM · 上限 1 小时" seal="决议" out={SHOTS.now[1] - 4} originalSize={28} titleSize={30} metaSize={28} maxWidth={720} />
 
       <CornerNote f={f} at={SHOTS.utc[0] + 10} text={COPY.utcFoot} out={SHOTS.leap[0] - 6} />
-      <CornerNote f={f} at={SHOTS.earth[0] + 6} text={COPY.leapFoot} out={SHOTS.rewind[0] - 4} />
+      <CornerNote f={f} at={SHOTS.earth[0] + 6} text={COPY.leapFoot} out={SHOTS.rewind[0]} />
       <CornerNote f={f} at={SHOTS.base100[0] + 8} text={COPY.base100Foot} out={SHOTS.formula[0] - 4} />
       <CornerNote f={f} at={SHOTS.names[0] + 8} text={COPY.namesFoot} out={HIT2 - 12} />
 
       <AbsoluteFill style={{background: '#000', opacity: dark, pointerEvents: 'none'}} />
 
       {CUES.map(([, zh, en], i) => {
-        const at = cueStart(i);
-        const bar = CUES[i][0];
-        const out = bar === 7 ? DARK_FROM : bar === 14 ? HIT2 - 12 : cueEnd(i) - 12;
+        const at = captionAt(i);
+        const out = captionOut(i);
         if (f < at - 2 || f > out + 14) return null;
-        return <GCaption key={i} f={f} at={at} out={out} text={zh} en={en} y={950} size={40} perChar={1} />;
+        return <GCaption key={i} f={f} at={at} out={out} text={zh} en={en} y={950} size={40} perChar={ANIM.captionPerChar} />;
       })}
 
-      <AbsoluteFill style={{background: '#000', opacity: clamp01((f - (DURATION - 45)) / 45), pointerEvents: 'none'}} />
+      <AbsoluteFill style={{background: '#000', opacity: clamp01((f - (DURATION - 20)) / 20), pointerEvents: 'none'}} />
       <Grain />
     </AbsoluteFill>
   );

@@ -19,7 +19,7 @@ const probe = async (file: string) => {
 
 /**
  * 配乐 / 音效文件不在 public/ 时跳过，不让 Studio 预览和渲染失败。
- * we-never.mp3 不随仓库分发：缺文件时画面仍按 HIT=524、HIT2=972 走。
+ * we-never.mp3 不随仓库分发：缺文件时画面仍按 HIT=524、HIT2 落在第 21.5 小节。
  */
 export const EpisodeAudio: React.FC<{bgm: string; room?: string; sfx: readonly (readonly [string, number, number])[]; roomVolume?: number}> = ({bgm, room, sfx, roomVolume = 1.4}) => {
   const files = [bgm, ...(room ? [room] : []), ...sfx.map(([f]) => f)];

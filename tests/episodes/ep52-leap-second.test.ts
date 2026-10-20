@@ -5,6 +5,7 @@ import {
   BAR,
   barSec,
   CALENDAR_READY_YEAR,
+  CLOSE_BAR,
   COPY,
   CUES,
   cueStart,
@@ -44,18 +45,20 @@ const TRAD_ONLY = /[歲曆萬時實經餘氣]/;
 const SIMP_ONLY = /[岁历万时实经余气]/;
 
 describe('ep52 闰秒与授时历', () => {
-  it('高潮踩在 we-never 第一个重拍（17.45 秒 / 第 524 帧）上，第二个爆点在第 21.5 小节', () => {
+  it('高潮踩在 we-never 第一个重拍（17.45 秒 / 第 524 帧）上，第二个爆点在第 22.5 小节', () => {
     expect(HIT).toBe(524);
     expect(HIT2).toBe(Math.round(barSec(HIT2_BAR) * FPS));
-    expect(HIT2_BAR).toBe(21.5);
+    expect(HIT2_BAR).toBe(22.5);
     expect(Math.abs(HIT - 17.45 * FPS)).toBeLessThanOrEqual(2);
     expect(Math.abs(barSec(8) - 17.45)).toBeLessThan(2 / FPS);
     expect(DARK_FROM).toBeLessThan(HIT - 10);
     expect(DARK_FROM).toBe(501);
   });
-  it('片长 60 秒 = 1800 帧', () => {
-    expect(DURATION).toBe(1800);
-    expect(DURATION / FPS).toBe(60);
+  it('片长落在小节线上，由阅读停留决定，不再卡 60 秒', () => {
+    expect(CLOSE_BAR).toBe(33);
+    expect(DURATION).toBe(Math.round(barSec(CLOSE_BAR) * FPS));
+    expect(DURATION / FPS).toBeGreaterThan(60);
+    expect(DURATION / FPS).toBeLessThan(80);
   });
   it('字幕：按小节递增、都在片长内、中文不超过 18 字、都有英文', () => {
     for (let i = 1; i < CUES.length; i++) expect(CUES[i][0]).toBeGreaterThan(CUES[i - 1][0]);
@@ -65,9 +68,9 @@ describe('ep52 闰秒与授时历', () => {
       expect(en.length).toBeGreaterThan(0);
     });
   });
-  it('锚词：开头埋下、第 18 小节重新定义；重拍前话说一半；最后一句是问题', () => {
+  it('锚词：开头埋下、第 28.5 小节重新定义；重拍前话说一半；最后一句是问题', () => {
     expect(CUES[0][1]).toContain(ANCHOR);
-    expect(CUES.some(([bar, zh]) => bar === 25.5 && zh.includes(ANCHOR))).toBe(true);
+    expect(CUES.some(([bar, zh]) => bar === 28.5 && zh.includes(ANCHOR))).toBe(true);
     const before = CUES.filter(([bar]) => bar < 8).pop()!;
     expect(before[1]).toMatch(/——$/);
     expect(CUES[CUES.length - 1][1]).toMatch(/？$/);

@@ -26,7 +26,7 @@ import {ANIM, COPY, CUES, captionAt, captionOut, DARK_FROM, DURATION, FREEZE, HI
  * ep52 闰秒与授时历（无口播）：锚词「一秒」。
  * 0–17.4 秒一个连续长镜头：发光秒点 → 决议原文 → 27 个闰秒 → 地球自转 → 年份倒翻回 1280；
  * 17.45 秒随重拍砸出 8.64；之后原文、百进制、算式、日周一万、两种叫法、2027 新规则、两盘合成一秒，抛问题。
- * 密镜按整小节 / 半小节拉长，片长 60 秒。
+ * 密镜按整小节 / 半小节拉长，片长跟着阅读停留走（约 71 秒）。
  */
 export const Ep52Second: React.FC = () => {
   const f = useCurrentFrame();

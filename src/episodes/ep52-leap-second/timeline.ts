@@ -1,8 +1,8 @@
 /**
- * ep52 闰秒与授时历：60 秒、无口播，画面 + 双语字幕 + 配乐（音乐库 we-never，从第 0 秒开始）。
+ * ep52 闰秒与授时历：无口播，画面 + 双语字幕 + 配乐（音乐库 we-never，从第 0 秒开始）。
  * 叙事按「锚词」方法组织：锚词「一秒」——开头是习以为常，第 17.45 秒随音乐重拍砸出换算 8.64，
- * 第 21.5 小节第二个小爆点砸出「分」，结尾把「一秒」重新定义成人和天商量出来的尺度。
- * 所有时间都挂在音乐的小节线上（可半小节）；场景组件和测试共用这一份。
+ * 第 22.5 小节第二个小爆点砸出「分」，结尾把「一秒」重新定义成人和天商量出来的尺度。
+ * 片长由各镜阅读停留自然决定（约 71 秒），镜头边界落在小节 / 半小节上。
  * 本文件不 import 别的 .ts / .tsx。
  */
 export const FPS = 30;
@@ -15,20 +15,21 @@ export const BAR0 = 0.36;
 export const barSec = (k: number) => BAR0 + BAR * k;
 export const fr = (sec: number) => Math.round(sec * FPS);
 
-/** 第一个重拍（8.64 砸出来）钉在 we-never 第 8 小节 / 17.45 秒；第二个小爆点「分」后移到第 21.5 小节 */
+/** 第一个重拍（8.64 砸出来）钉在 we-never 第 8 小节 / 17.45 秒；第二个小爆点「分」在第 22.5 小节 */
 export const HIT = fr(17.45);
-export const HIT2_BAR = 21.5;
+export const HIT2_BAR = 22.5;
 export const HIT2 = fr(barSec(HIT2_BAR));
 /** 重拍前收暗：16.70 秒起压暗，HIT 前 3 帧完全静止 */
 export const DARK_FROM = fr(16.7);
 export const FREEZE = 3;
 
-/** 60 秒上限；镜头边界仍落在小节 / 半小节上 */
-export const DURATION = fr(60);
+/** 片尾落在第 33 小节；时长跟着停留走，不再卡 60 秒 */
+export const CLOSE_BAR = 33;
+export const DURATION = fr(barSec(CLOSE_BAR));
 
 /** 入场时长（帧）：场景组件和停留测试共用，避免各写各的 */
 export const ANIM = {
-  captionPerChar: 0.5,
+  captionPerChar: 0,
   captionFade: 10,
   quoteAtOffset: -40,
   quoteBodyDelay: 14,
@@ -117,23 +118,23 @@ export const YEAR_LEAP_TO = '2017';
 export const YEAR_REWIND_FROM = '2026';
 export const YEAR_REWIND_TO = '1280';
 
-/** 字幕：[小节号, 中文, 英文]。【】里的词变金色；中文不超过 18 字。第 8、21.5 小节是爆点，不配字幕。 */
+/** 字幕：[小节号, 中文, 英文]。【】里的词变金色；中文不超过 18 字。第 8、22.5 小节是爆点，不配字幕。 */
 export const CUES: [number, string, string][] = [
   [0, '你以为，【一秒】就是一秒。', 'You think a second is just a second.'],
   [2, '国际计量大会刚决定：不再加闰秒。', 'The world just voted to stop adding leap seconds.'],
   [4, '1972年起，共插入27个闰秒。', 'Since 1972, clocks have gained 27 leap seconds.'],
-  [6, '只为跟上地球的自转。', 'All to keep pace with a spinning Earth.'],
+  [5.5, '只为跟上地球的自转。', 'All to keep pace with a spinning Earth.'],
   [7, '可元朝授时历里的“1秒”，等于——', 'But in the Yuan dynasty\'s calendar, one "second" was —'],
-  [9.5, '《元史》：一年365日【24分25秒】。', 'The Yuan History: a year is 365 days, 24 fen, 25 miao.'],
+  [10, '《元史》：一年365日【24分25秒】。', 'The Yuan History: a year is 365 days, 24 fen, 25 miao.'],
   [12, '百进制：1日100分，1分100秒。', 'Base one hundred: 100 fen a day, 100 miao a fen.'],
   [13.5, '一天只有【一万】个“秒”。', 'A day held only ten thousand "seconds".'],
   [16.5, '历经写得更直白：日周，一万。', 'The calendar canon says it plainly: one day, ten thousand.'],
-  [18, '这里的“分”，同样是8.64秒。', 'Here the same slice is called a "fen".'],
-  [20, '卷五十二叫它“秒”，卷五十四叫它——', 'Juan 52 calls it a "second"; juan 54 calls it —'],
-  [23, '2027年5月20日起，钟不再跳秒。', 'From 20 May 2027, clocks stop leaping.'],
-  [24.5, '古人追着天改历；今人先让钟走稳。', 'The ancients chased the sky; we chose a steady clock.'],
-  [25.5, '【一秒】多长，是人跟天商量出来的。', "How long a second is — that's a deal between us and the sky."],
-  [26.5, '要是让你重新定义一秒，你会怎么定？', 'If you could redefine a second, how would you?'],
+  [18.5, '这里的“分”，同样是8.64秒。', 'Here the same slice is called a "fen".'],
+  [20.5, '卷五十二叫它“秒”，卷五十四叫它——', 'Juan 52 calls it a "second"; juan 54 calls it —'],
+  [24.5, '2027年5月20日起，钟不再跳秒。', 'From 20 May 2027, clocks stop leaping.'],
+  [26.5, '古人追着天改历；今人先让钟走稳。', 'The ancients chased the sky; we chose a steady clock.'],
+  [28.5, '【一秒】多长，是人跟天商量出来的。', "How long a second is — that's a deal between us and the sky."],
+  [30.5, '要是让你重新定义一秒，你会怎么定？', 'If you could redefine a second, how would you?'],
 ];
 export const cueStart = (i: number) => fr(barSec(CUES[i][0]));
 export const cueEnd = (i: number) => (i + 1 < CUES.length ? cueStart(i + 1) : DURATION);
@@ -142,21 +143,21 @@ export const cueEnd = (i: number) => (i + 1 < CUES.length ? cueStart(i + 1) : DU
 export const SHOTS = {
   tick: [0, fr(barSec(2))],
   utc: [fr(barSec(2)), fr(barSec(4))],
-  leap: [fr(barSec(4)), fr(barSec(6))],
-  earth: [fr(barSec(6)), fr(barSec(7))],
+  leap: [fr(barSec(4)), fr(barSec(5.5))],
+  earth: [fr(barSec(5.5)), fr(barSec(7))],
   rewind: [fr(barSec(7)), HIT],
-  hit: [HIT, fr(barSec(9.5))],
-  quote52: [fr(barSec(9.5)), fr(barSec(12))],
+  hit: [HIT, fr(barSec(10))],
+  quote52: [fr(barSec(10)), fr(barSec(12))],
   base100: [fr(barSec(12)), fr(barSec(13.5))],
   formula: [fr(barSec(13.5)), fr(barSec(16.5))],
-  dial54: [fr(barSec(16.5)), fr(barSec(18))],
-  fenQuote: [fr(barSec(18)), fr(barSec(20))],
-  names: [fr(barSec(20)), HIT2],
-  hit2: [HIT2, fr(barSec(23))],
-  now: [fr(barSec(23)), fr(barSec(24.5))],
-  bridge: [fr(barSec(24.5)), fr(barSec(25.5))],
-  redefine: [fr(barSec(25.5)), fr(barSec(26.5))],
-  close: [fr(barSec(26.5)), DURATION],
+  dial54: [fr(barSec(16.5)), fr(barSec(18.5))],
+  fenQuote: [fr(barSec(18.5)), fr(barSec(20.5))],
+  names: [fr(barSec(20.5)), HIT2],
+  hit2: [HIT2, fr(barSec(24.5))],
+  now: [fr(barSec(24.5)), fr(barSec(26.5))],
+  bridge: [fr(barSec(26.5)), fr(barSec(28.5))],
+  redefine: [fr(barSec(28.5)), fr(barSec(30.5))],
+  close: [fr(barSec(30.5)), DURATION],
 } as const;
 
 /** 音效：[文件, 帧, 音量]。impact 是重拍上的低沉冲击（audio/episodes/ep52-*.mjs 生成），其余用共享音效 */
@@ -176,7 +177,7 @@ export const readableChars = (s: string) => [...s].filter((c) => /[\u4e00-\u9fff
 
 export const needHoldSec = (s: string) => Math.max(MIN_HOLD_SEC, readableChars(s) / HAN_PER_SEC);
 
-/** 倒翻那句提前入场，才能在收暗前停够 1.5 秒 */
+/** 倒翻那句提前入场；字幕叠在压暗层之上，一直停到砸字前 */
 export const captionAt = (i: number) => {
   const at = cueStart(i);
   if (at >= SHOTS.rewind[0] && at < HIT) return at - 24;
@@ -185,7 +186,7 @@ export const captionAt = (i: number) => {
 
 export const captionOut = (i: number) => {
   const at = cueStart(i);
-  if (at >= SHOTS.rewind[0] && at < HIT) return DARK_FROM;
+  if (at >= SHOTS.rewind[0] && at < HIT) return HIT - 4;
   if (at >= SHOTS.names[0] && at < HIT2) return HIT2 - 8;
   return cueEnd(i);
 };
@@ -194,13 +195,16 @@ export type TextHold = {id: string; enter: number; exit: number; chars: number; 
 
 /**
  * 每个字幕 / 引文 / 算式 / 卡片的入场结束帧、退场开始帧。
- * 引文按正文（多行合算）计阅读时间；算式按脚注中文计；卡片两张合算；字幕保底 1.5 秒。
+ * 字幕、引文正文、算式脚注、两张卡片：max(1.5 秒, 中文每秒 5 字)；公式 8.64 出来后再停 2.5 秒。
  */
 export const textHolds = (): TextHold[] => {
   const holds: TextHold[] = [];
-  const capEnter = (at: number, zh: string) => at + readableChars(zh) * ANIM.captionPerChar + ANIM.captionFade;
+  const capEnter = (at: number, zh: string) => {
+    const n = [...zh].filter((c) => c !== '【' && c !== '】').length;
+    return at + Math.max(0, n - 1) * ANIM.captionPerChar + ANIM.captionFade;
+  };
   CUES.forEach(([, zh], i) => {
-    holds.push({id: `caption-${i}`, enter: capEnter(captionAt(i), zh), exit: captionOut(i), chars: readableChars(zh), minSec: MIN_HOLD_SEC});
+    holds.push({id: `caption-${i}`, enter: capEnter(captionAt(i), zh), exit: captionOut(i), chars: readableChars(zh), minSec: needHoldSec(zh)});
   });
   const qIn = (shot0: number) => shot0 + ANIM.quoteAtOffset + ANIM.quoteBodyDelay + ANIM.quoteBodyDur;
   const qOut = (shot1: number) => shot1 - 12;
@@ -212,8 +216,8 @@ export const textHolds = (): TextHold[] => {
   holds.push({id: 'formula-result', enter: SHOTS.formula[0] + ANIM.formulaResult, exit: SHOTS.formula[1] - 12, chars: 0, minSec: FORMULA_RESULT_HOLD_SEC});
   const cards = COPY.card52 + COPY.card54;
   holds.push({id: 'cards', enter: SHOTS.names[0] + ANIM.cardsIn, exit: HIT2 - 8, chars: readableChars(cards), minSec: needHoldSec(cards)});
-  holds.push({id: 'smash-term', enter: HIT + ANIM.smashSub, exit: SHOTS.hit[1] - 14, chars: readableChars(TERM), minSec: MIN_HOLD_SEC});
-  holds.push({id: 'smash-term2', enter: HIT2 + ANIM.smashSub, exit: SHOTS.hit2[1] - 8, chars: readableChars(TERM2), minSec: MIN_HOLD_SEC});
+  holds.push({id: 'smash-term', enter: HIT + ANIM.smashSub, exit: SHOTS.hit[1] - 14, chars: readableChars(TERM), minSec: needHoldSec(TERM)});
+  holds.push({id: 'smash-term2', enter: HIT2 + ANIM.smashSub, exit: SHOTS.hit2[1] - 8, chars: readableChars(TERM2), minSec: needHoldSec(TERM2)});
   holds.push({id: 'utc-foot', enter: SHOTS.utc[0] + 10 + ANIM.cornerIn, exit: SHOTS.leap[0] - 6, chars: readableChars(COPY.utcFoot), minSec: MIN_HOLD_SEC});
   holds.push({id: 'leap-foot', enter: SHOTS.earth[0] + 6 + ANIM.cornerIn, exit: SHOTS.rewind[0], chars: readableChars(COPY.leapFoot), minSec: MIN_HOLD_SEC});
   holds.push({id: 'base100-foot', enter: SHOTS.base100[0] + 8 + ANIM.cornerIn, exit: SHOTS.formula[0] - 4, chars: readableChars(COPY.base100Foot), minSec: MIN_HOLD_SEC});

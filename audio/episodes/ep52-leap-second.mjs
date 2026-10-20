@@ -1,6 +1,6 @@
-// ep52 闰秒与授时历：配乐来自音乐库 we-never，从第 0 秒开始（片长 60 秒，结尾 2 秒淡出），
+// ep52 闰秒与授时历：配乐来自音乐库 we-never，从第 0 秒开始（片长跟 timeline 第 33 小节走，结尾 2 秒淡出），
 // 没有人声，配乐就是主音轨，响度定在 −16 LUFS → public/audio/ep52-leap-second/bgm.wav
-// we-never.mp3 不随仓库分发：曲子缺失时写成 60 秒静音占位，时间表 HIT=524，HIT2 在第 21.5 小节。
+// we-never.mp3 不随仓库分发：曲子缺失时写成等长静音占位，时间表 HIT=524，HIT2 在第 22.5 小节。
 // 另外生成两个本期专用音效：impact.wav（重拍上的低沉冲击）、room.wav（很轻的纸页 / 室内底噪）
 import {execFileSync} from 'node:child_process';
 import {mkdirSync} from 'node:fs';
@@ -9,7 +9,10 @@ import {fileURLToPath} from 'node:url';
 import {cutMusic} from '../music.mjs';
 
 const EP = 'ep52-leap-second';
-const DURATION = 60;
+const BAR = 2.136;
+const BAR0 = 0.36;
+const CLOSE_BAR = 33;
+const DURATION = BAR0 + BAR * CLOSE_BAR;
 const dir = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'public', 'audio', EP);
 mkdirSync(dir, {recursive: true});
 const ff = (args) => execFileSync('ffmpeg', ['-v', 'error', '-y', ...args]);

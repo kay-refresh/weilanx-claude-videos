@@ -122,14 +122,28 @@ export const SealMark: React.FC<{text: string; size?: number; color?: string}> =
 /**
  * 右上角文献引用：原文书名（斜体）+ 中文书名（金色书名号）+ 作者 · 年份，右侧一枚小印，下面一条金线。
  */
-export const BookCite: React.FC<{f: number; at: number; original: string; title: string; meta: string; seal?: string; out?: number; x?: number; y?: number}> = ({f, at, original, title, meta, seal = '文献', out, x = 56, y = 34}) => {
+export const BookCite: React.FC<{
+  f: number;
+  at: number;
+  original: string;
+  title: string;
+  meta: string;
+  seal?: string;
+  out?: number;
+  x?: number;
+  y?: number;
+  originalSize?: number;
+  titleSize?: number;
+  metaSize?: number;
+  maxWidth?: number;
+}> = ({f, at, original, title, meta, seal = '文献', out, x = 56, y = 34, originalSize = 19, titleSize = 25, metaSize = 16, maxWidth = 560}) => {
   const s = soft(f, at + 6, 22, out);
   return (
     <div style={{position: 'absolute', right: x, top: y, opacity: s.opacity, filter: s.filter, display: 'flex', gap: 14, alignItems: 'flex-start'}}>
-      <div style={{textAlign: 'right', maxWidth: 560}}>
-        <div style={{fontFamily: GF.latinItalic, fontSize: 19, color: G.ivoryDim, lineHeight: 1.25}}>{original}</div>
-        <div style={{fontFamily: GF.cn, fontSize: 25, fontWeight: 700, color: G.gold, marginTop: 6}}>《{title}》</div>
-        <div style={{fontFamily: GF.cn, fontSize: 16, color: G.ivoryFaint, marginTop: 6, letterSpacing: 1}}>{meta}</div>
+      <div style={{textAlign: 'right', maxWidth}}>
+        <div style={{fontFamily: GF.latinItalic, fontSize: originalSize, color: G.ivoryDim, lineHeight: 1.25}}>{original}</div>
+        <div style={{fontFamily: GF.cn, fontSize: titleSize, fontWeight: 700, color: G.gold, marginTop: 6, lineHeight: 1.3}}>《{title}》</div>
+        <div style={{fontFamily: GF.cn, fontSize: metaSize, color: G.ivoryFaint, marginTop: 6, letterSpacing: 1, lineHeight: 1.35}}>{meta}</div>
         <div style={{height: 1, marginTop: 8, background: `linear-gradient(270deg, ${G.goldLine}, rgba(214,180,106,0))`}} />
       </div>
       <SealMark text={seal} />
@@ -234,8 +248,22 @@ export const bellPath = (x0: number, x1: number, base: number, h: number, steps 
   return pts.join(' ');
 };
 
-/** 引文：上方原文（斜体小字），中间中文大引文（可用【】标金），下方「—— 出处」 */
-export const GQuote: React.FC<{f: number; at: number; original?: string; text: string; source: string; x?: number; y?: number; w?: number; align?: 'left' | 'center'; out?: number}> = ({
+/** 引文：上方原文（斜体小字），中间中文大引文（可用【】标金），下方「—— 出处」。mark 是「原文」一类小标。 */
+export const GQuote: React.FC<{
+  f: number;
+  at: number;
+  original?: string;
+  text: string;
+  source: string;
+  x?: number;
+  y?: number;
+  w?: number;
+  align?: 'left' | 'center';
+  out?: number;
+  sourceSize?: number;
+  mark?: string;
+  markSize?: number;
+}> = ({
   f,
   at,
   original,
@@ -246,6 +274,9 @@ export const GQuote: React.FC<{f: number; at: number; original?: string; text: s
   w = 1100,
   align = 'center',
   out,
+  sourceSize = 20,
+  mark,
+  markSize = 28,
 }) => {
   const a = soft(f, at, 22, out);
   const b = soft(f, at + 14, 26, out);
@@ -255,6 +286,9 @@ export const GQuote: React.FC<{f: number; at: number; original?: string; text: s
   return (
     <div style={{position: 'absolute', left, top: y, width: w, textAlign: align}}>
       {original ? <div style={{fontFamily: GF.latinItalic, fontSize: 21, color: G.ivoryDim, opacity: a.opacity, filter: a.filter, marginBottom: 26}}>« {original} »</div> : null}
+      {mark ? (
+        <div style={{fontFamily: GF.cn, fontSize: markSize, letterSpacing: 4, color: G.gold, marginBottom: 10, lineHeight: 1.3, opacity: b.opacity, filter: b.filter}}>{mark}</div>
+      ) : null}
       <div style={{fontFamily: GF.cn, fontWeight: 700, fontSize: 50, lineHeight: 1.45, color: G.ivory, opacity: b.opacity, filter: b.filter}}>
         {lines.map((l, i) => (
           <div key={i}>
@@ -270,7 +304,7 @@ export const GQuote: React.FC<{f: number; at: number; original?: string; text: s
           </div>
         ))}
       </div>
-      <div style={{fontFamily: GF.cn, fontSize: 20, color: G.ivoryFaint, marginTop: 26, letterSpacing: 2, opacity: c.opacity, filter: c.filter}}>—— {source}</div>
+      <div style={{fontFamily: GF.cn, fontSize: sourceSize, color: G.ivoryFaint, marginTop: 26, letterSpacing: 2, lineHeight: 1.4, opacity: c.opacity, filter: c.filter}}>—— {source}</div>
     </div>
   );
 };

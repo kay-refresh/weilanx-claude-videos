@@ -98,7 +98,7 @@ Studio 里的 `library-wardrobe`（矢量版全部配饰与表情）、`library-
 | `theme.ts` | 配色 `G`（黑底、暖 / 冷光晕、金、象牙白、羊皮纸、朱红）、字体 `GF`（Garamond 数字和西文、Playfair 斜体书名、宋体中文）、`goldText` 金色渐变大字、`goldTextLight` 小字号重点词、`soft` 模糊柔入、`drift` 慢推 |
 | `stage.tsx` | `GildedBg` 背景（光晕 + 暗角，`tone` 暖 / 冷）、`Dust` 浮尘、`Grain` 胶片颗粒、`YearHeader` 左上年份抬头（`prev` + `rollAt` 老虎机翻年份，`prefix` 写「约」）、`BookCite` 右上文献引用、`SealMark` 朱红小印、`GCaption` 字幕（`【词】` 变金、逐字柔入）、`Smash` 爆点大字（光晕骤亮、金字收拢、光环扩散，`sub` 术语 · English；ep32 起从期里挪进来）、`TitleCard` 片头 / 片尾标题卡（拉丁小标 + 金色大标题 + 放射光芒，可加钟形曲线）、`GQuote` 引文、`Soft` 柔入容器、`bellPath` 钟形曲线路径 |
 | `props.tsx` | `DieFace` 平面骰子（可写 `1/6` 代替点数）、`Die3D` 立体骰子 + `dieTumble` 翻滚落定、`GoldCoin` 金币（`cut` 切扇形、`split` 分开）、`ScoreBar` 分段计分条、`Contender` 对决大数字、`RedStamp` 朱红盖章、`Parchment` 羊皮纸账册、`ProbCard` 描金边对比卡（进度条带 50% 刻度） |
-| `charts.tsx` | `GoldTree` 二叉树（逐层长出，`highlight` 路径描成发光朱红）、`BellBars` 二项分布柱 → 钟形曲线（n 大时自动取 ±4σ 窗口）、`GaltonBoard` 高尔顿板（确定性落珠、堆积、可描曲线）、`RatioChart` 对数横轴的收敛曲线、`DotField` 点阵人群、`GoldWheel` 金线圆环 / 命运之轮 |
+| `charts.tsx` | `GoldTree` 二叉树（逐层长出，`highlight` 路径描成发光朱红）、`BellBars` 二项分布柱 → 钟形曲线（n 大时自动取 ±4σ 窗口）、`GaltonBoard` 高尔顿板（确定性落珠、堆积、可描曲线）、`RatioChart` 对数横轴的收敛曲线、`DotField` 点阵人群、`GoldWheel` 金线圆环 / 命运之轮（默认 72 道刻，可用 `ticks` 改密度，已有期数外观不变）、`WanDial` 万格刻度盘（默认 100×100 = 10,000 格，细刻用虚线圈、长刻用线，`p` 从 12 点顺时针画满） |
 
 要点：所有元素都用 `soft` / `Soft` 柔入，不用弹跳；一场里最多一种朱红；图表的线要「画出来」（`pathLength={1}` + `strokeDasharray`）；场与场之间用模糊交叉淡化，硬切留给大段落。
 
